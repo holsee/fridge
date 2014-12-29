@@ -3,26 +3,25 @@ defmodule FridgeServerTest do
   doctest FridgeServer
 
   test "putting something into the fridge" do
-    {:ok, fridge} = :gen_server.start_link FridgeServer, [], []
-    assert :ok == :gen_server.call fridge, {:store, :bacon}
+    fridge = FridgeServer.start_link []
+    assert :ok == FridgeServer.store fridge, :bacon
   end
 
   test "taking something from the fridge" do
-    {:ok, fridge} = :gen_server.start_link FridgeServer, [], []
-    :gen_server.call fridge, {:store, :bacon}
-    assert {:ok, :bacon} == :gen_server.call fridge, {:take, :bacon}
-    assert :not_found == :gen_server.call fridge, {:take, :bacon}
+    fridge = FridgeServer.start_link []
+    FridgeServer.store fridge, :bacon
+    assert {:ok, :bacon} == FridgeServer.take fridge, :bacon
   end
 
   test "item is removed from the fridge" do
-    {:ok, fridge} = :gen_server.start_link FridgeServer, [], []
-    :gen_server.call fridge, {:store, :bacon}
-    {:ok, :bacon} == :gen_server.call fridge, {:take, :bacon}
-    assert :not_found == :gen_server.call fridge, {:take, :bacon}
+    fridge = FridgeServer.start_link []
+    FridgeServer.store fridge, :bacon
+    {:ok, :bacon} == FridgeServer.take fridge, :bacon
+    assert :not_found == FridgeServer.take fridge, :bacon
   end
 
   test "removing something from the fridge that isn't there" do
-    {:ok, fridge} = :gen_server.start_link FridgeServer, [], []
-    assert :not_found == :gen_server.call fridge, {:take, :bacon}
+    fridge = FridgeServer.start_link []
+    assert :not_found == FridgeServer.take fridge, :bacon
   end
 end
