@@ -1,0 +1,2 @@
+defmodule Fridge do
+end
